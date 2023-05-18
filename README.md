@@ -71,5 +71,3 @@ cabal install containers random random-shuffle gloss --force-reinstalls
   ./patiencesort
   ```  
   It is highly recommended to use last option for GUI programs, such as Minesweeper game in this repository and start it only from already builded file
-## Roadmap for Haskell learning
-  
