@@ -1,122 +1,75 @@
 # haskell-practice
-## Gaussian reduce algorithm
-  СЛАУ или Система линейных алгебраических уравнений - это система уравнений, каждое из которых является линейным.   
-  Решение СЛАУ - это нахождение значений переменных, которые     удовлетворяют всем уравнениям системы.
-  Алгоритм Гаусса - это метод элементарных преобразований над матрицей коэффициентов и свободных членов, который позволяет решить СЛАУ.  
-  Его суть заключается в последовательном исключении переменных из уравнений системы до тех пор, пока не останутся только уравнения с одной переменной.
-
-  Теперь перейдем к объяснению метода. Итак, имеется система линейных уравнений:
+## Dependencies  
+  ### Gaussian elimination
+  This project has no dependencies, so for build you will need a basic Haskell platform install:
+  1. For Ubuntu and Ubuntu-like Unix systems
+  You probably need to install ghc compiler and cabal package manager
   ```
-  a11*x1 + a12*x2 + ... + a1n*xn = b1  
-  a21*x1 + a22*x2 + ... + a2n*xn = b2  
-  ...  
-  am1*x1 + am2*x2 + ... + amn*xn = bm
+  sudo apt-get install haskell-platform cabal
+  ```
+  Also, you may need to install libraries for correct gcc and ghc work
+  ```
+  sudo apt-get install g++ gcc libc6-dev libffi-dev libgmp-dev
+  ```
+  For any library you can't install use 'libname-dev' instead
+ 2. For Windows
+ It's recommended to use GHCup utility to install and manage packages and utilities on Windows machines
+ ```
+ Set-ExecutionPolicy Bypass -Scope Process -Force;[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; try { Invoke-Command -ScriptBlock ([ScriptBlock]::Create((Invoke-WebRequest https://www.haskell.org/ghcup/sh/bootstrap-haskell.ps1 -UseBasicParsing))) -ArgumentList $true } catch { Write-Error $_ }
+ ```
+ If it is not possible on your exact device try to install it manually from haskell.org and cabal from chocolatey
+ 
+ - https://www.haskell.org/ghc/download.html  
+ - https://community.chocolatey.org/packages/cabal  
+ 
+ ### Patience sort  
+ - Data.List
+ 1. For Ubuntu and Ubuntu-like Unix systems
+ ```
+ sudo cabal install base --force-reinstalls
+ ```
+ 2. For Windows
+ ```
+ cabal install base
+ ```
+ ### Minesweeper
+ - Data.Map 
+ - Data.Set
+ - Graphics.Gloss
+ - System.Random
+ - System.Random.Shuffle  
+
+As for myself, I builded this exact program on Ubuntu 20.02 via glosslib. System.Random, System.Random.Shuffle and Graphics.Gloss may be temporary or permanently broken on windows devices, so try to resolve this problem by yourself. If it's correctly building and packages are found by cabal you are all done to start.  
+1. For Ubuntu and Ubuntu-like Unix systems
+```
+sudo cabal install containers random random-shuffle gloss --force-reinstalls
+```
+And you also need to install gloss depend libs
+```
+sudo apt-get install libghc-gloss-dev
+```
+2. For Windows
+```
+cabal install containers random random-shuffle gloss --force-reinstalls
+```
+## Installation and build
+  After all package dependencies are installed, you need to start a program either from ghc, ghci or build it into executable file. Note that you need to be in the same directory with file you starting/building  
+  For example for patiencesort.hs:  
+  ```
+  ghc patiencesort.hs
+  ```
+  or
+  ```
+  ghci patiencesort.hs
+  ```
+  or
+  ```
+  ghc patiencesort.hs -0 patiencesort
+  ```
+  For the last option, after you successfully build an executable, you can start program from file:
+  ```
+  ./patiencesort
   ```  
-  где a - коэффициенты, b - свободные члены, x1,x2,...,xn - переменные.
-  Процесс решения СЛАУ методом Гаусса можно разделить на два этапа: прямой ход и обратный ход.  
-  Прямой ход заключается в последовательном исключении переменных из уравнений системы до тех пор, пока не останутся только уравнения с одной переменной.  
-  Переменная исключается из всех уравнений, кроме первого, заменой уравнений следующего вида:  
-  ```
-  a21/a11*row1 - row2 -> row2
-  a31/a11*row1 - row3 -> row3
-  ...
-  an1/a11*row1 - rown -> rown
-  ```
-  Здесь row - i-я строка матрицы коэффициентов.  
+  It is highly recommended to use last option for GUI programs, such as Minesweeper game in this repository and start it only from already builded file
+## Roadmap for Haskell learning
   
-  Затем, делим второй элемент следующей строки матрицы коэффициентов на новый a22 и вычитаем строку со вторым элементом из всех последующих строк. Это приводит к тому, что второй столбец
-  матрицы коэффициентов становится равным столбцу свободных членов.  
-  
-  Мы повторяем этот процесс для каждой переменной, пока не получим треугольную матрицу.  
-  
-  Обратный ход заключается в решении системы уравнений с помощью обратного прохода метода Гаусса. Начинаем с последнего уравнения, которое уже содержит единственную переменную. Затем    
-  используем это решение для подстановки в предыдущее уравнение и т.д., до тех пор, пока не получим значения всех переменных.
-## Patience sort
-  Итак, возьмём из колоды черви. Они будут изображать массив из тринадцати случайных элементов.  
-  
-  ![](https://habrastorage.org/webt/j_/ik/zg/j_ikzgnokw8bkhj9_frik-mai_e.png)
-  
-  Нам нужно разложить карты в несколько стопок, таким образом, чтобы в каждой стопке карты представляли из себя упорядоченную последовательность.  
-  Другими словами, наша задача на этом этапе — из имеющегося неотсортированного массива быстро создать несколько упорядоченных подмассивов. При этом крайне желательно, чтобы количество   этих подмассивов были поменьше, а значит нужно стремиться к тому, чтобы подмассивы были подлиннее. Делается это следующим образом.
-  
-  Первая карта — начало первой стопки.
-  
-  ![](https://habrastorage.org/webt/d9/sp/bn/d9spbncxz30rhzxqrzfvywhhm6k.png)
-  
-  В эту стопку перекладываем карты по очереди, до тех пор, пока очередная перекладываемая карта меньше чем верхняя в стопке.  
-  При этом каждая стопка является стеком — мы работаем не со всей стопкой, а только с верхней картой в ней, которую положили последней.  
-  
-  ![](https://habrastorage.org/webt/gf/gd/q-/gfgdq-oqzknwkou2dbcncafersa.png)
-  
-  Если текущая карта больше чем минимальная в стопке, значит, придётся создавать новую кучку, текущая карта открывает новую стопку.
-  
-  ![](https://habrastorage.org/webt/ab/97/z3/ab97z3z2dfaobk9tqveawpybhis.png)
-  
-  Очерёдность стопок важна! Если их количество уже более одного, то очередную карту мы кладём не в последнюю стопку, а в самую левую стопку, в которую можем положить.  
-  
-  Вот сейчас после дамы надо куда-то пристроить девятку. Механически хочется положить карту во вторую стопку, но в первой стопке верхняя карта больше девятки. Значит, можем продолжить   первую стопку, не нарушив её упорядоченность. Следующую тройку, которая идёт следом за девяткой, тоже кстати, отправляется в первую стопку.
-  
-  ![](https://habrastorage.org/webt/-4/ww/it/-4wwit3yrqc3gjywezucwhyh9lo.png)
-  
-  Семёрку и шестёрку в первую стопку добавить нельзя (они больше верхней карты в ней), но во второй стопке им пока находится место.
-  
-  ![](https://habrastorage.org/webt/zp/su/yc/zpsuycgew4jezzv44p3axcytg_i.png)
-  
-  Туз начинает новую стопку. Оставшаяся мелочь попадает в разные лотки, в зависимости от того, насколько левее была стопка, куда можно было вставить.
-  
-  ![](https://habrastorage.org/webt/uw/qw/r6/uwqwr6gzjdpdyogbzcts-whxoae.png)
-  
-  В итоге карты разложены в несколько стопок. В каждой стопке карты представляют из себя убывающую последовательность, вверху — наименьшая карта. Стопки являются стеками.  
-  
-  Так как мы старались сначала заполнять те стопки, что находились левее, у нас образовалось наименьшее возможно количество. Если бы мы просто прошлись по массиву и выделяли из него     убывающие подмассивы, то кучек, естественно будет полчаться намного больше.
-  
-  Сдвинем доступные верхние карты немного вниз, чтобы они встали в отдельный ряд. Если стопки являются стеками, то с нижним рядом будем работать как с очередью.
-  
-  ![](https://habrastorage.org/webt/-p/wo/sl/-pwosl95hk_iiqivtdkoypbk0oc.png)
-  
-  Что немаловажно — доступные верхние карты в стопках также представляют из себя упорядоченную последовательность. Нижний ряд уже отсортирован по возрастанию. Что и немудрено — при       формировании стопок карты поменьше отправлялись как можно левее.
-
-  В дальнейшем до конца сортировки нас интересуют не все карты из тех что разложены на столе. Нужны только вот эти:
-  * Самая левая карта (назовём её — текущая) в нижнем ряду-очереди.  
-  * В стопках-стеках работаем только с верхними доступными картами. При этом нужны только те стопки, которые находятся непосредственно на текущей картой и левее. Стопки которые             находятся правее в этот момент не нужны.  
-  В нижнем ряду перебираем карты слева-направо карты. Самая лева — текущий минимум, его возвращаем в первоначальный верхний ряд. При этом каждый раз, когда мы вернули на базу очередную   карту, необходимо на её место положить другую.  
-  Откуда её взять? Из тех стопок что находятся над текущей картой и левее её — среди доступных карт выбирается минимум, который             перемещается на вакантное место текущей       левой карты в нижнем ряду, а оттуда — в основной массив.
-
-  Двойка в массив возвращается сразу. Освободившееся место занимает тройка (перемещаем её из первой стопки в нижний ряд), а из нижнего ряда тройка как текущий минимум уходит в основной   массив. В первых двух стопках ищется снова минимум — это четвёрка — которая тоже отправляется домой. Текущим минимумом становится пятёрка и т.д.
-  
-  ![](https://habrastorage.org/webt/gi/ej/3x/giej3x5chmm4aggloxtewxvutem.png)  
-  
-## Minesweeper
-  На квадратном поле размером MxM клеток случайным образом расставлены K мин. При этом в одной клетке не может быть размещено более одной мины.  
-  Игроку в начале игры о расстановке мин на поле ничего не известно. За один ход разрешается открыть одну клетку. Если клетка содержит мину – игра проиграна, иначе – на клетку           выводится число от нуля до 8, которое означает суммарное количество мин, расположенных в клетках соседних с данной.
-    
-  Цель игры – открыть все пустые ячейки, не попав на мины.
-  Рассмотрим пример игры:
-  
-Пусть на поле размером 3x3 в клетках (3, 1) и (3, 2) расположены мины, отмеченные звездочками:
-
-![image](https://github.com/zachbabanov/haskell-practice/assets/64652465/3fe352dc-8492-4603-891b-674f007134f9)
-
-А поле перед игроком:
-
-![image](https://github.com/zachbabanov/haskell-practice/assets/64652465/96c9ac37-e39c-4466-a213-629fafb656a3)
-
-Опишем, как в данном случае мог бы сыграть человек, перечислив возможную последовательность ходов. 
-
-1. Пусть случайно открыта клетка (2, 3) и в ней появилась цифра 1. Следовательно, в одной из соседних пяти клеток находится ровно одна мина.  
-  
-![image](https://github.com/zachbabanov/haskell-practice/assets/64652465/4578c83d-1cd1-4736-b1ab-abc6a282cb5e)
-  
-2. Полученной информации недостаточно для того, чтобы узнать наверняка расположение остальных клеток, которые не содержат мин. Еще раз случайно откроем клетку:  
-
-![image](https://github.com/zachbabanov/haskell-practice/assets/64652465/1299ae8c-1b48-4d9d-8033-728629eef431)
-  
-3. Из рассмотрения следует, что на одной из клеток (2, 2) или (3, 2) стоит мина. Поэтому клетки (1, 3) и (1, 2) свободны. Откроем их:  
-
-![image](https://github.com/zachbabanov/haskell-practice/assets/64652465/4411c20d-1a47-49ff-8a27-ee6566116c34)
-
-4. Можно открыть еще три пустые клетки:  
-
-![image](https://github.com/zachbabanov/haskell-practice/assets/64652465/3db133c6-8f17-4337-8157-4736315d7ef6)
-
-5. Все пустые клетки открыты – цель игры достигнута.  
