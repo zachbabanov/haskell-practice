@@ -52,6 +52,18 @@ sudo apt-get install libghc-gloss-dev
 ```
 cabal install containers random random-shuffle gloss --force-reinstalls
 ```
+### Database
+- Data.Text.Encoding
+- Data.Binary  
+
+1. For Ubuntu and Ubuntu-like Unix systems
+```
+sudo cabal install text
+```
+2. For Windows
+```
+cabal install text
+```
 ## Installation and build
   After all package dependencies are installed, you need to start a program either from ghc, ghci or build it into executable file. Note that you need to be in the same directory with file you starting/building  
   For example for patiencesort.hs:  
